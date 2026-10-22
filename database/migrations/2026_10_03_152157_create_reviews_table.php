@@ -16,12 +16,11 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('appointment_id')->constrained()->restrictOnDelete();
-            $table->unsignedTinyInteger('rating');
+            $table->unsignedTinyInteger('rating')->raw('CHECK (rating >= 1 AND rating <= 5)');
             $table->text('comment')->nullable();
             $table->boolean('is_visible')->default(true);
             $table->timestamps();
             $table->unique('appointment_id'); // One review per appointment.
-            $table->check('rating >= 1 AND rating <= 5');
         });
 
         Schema::enableForeignKeyConstraints();

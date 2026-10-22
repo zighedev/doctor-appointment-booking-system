@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('doctor_id')->constrained()->cascadeOnDelete();
             $table->foreignId('clinic_id')->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('day_of_week')->comment('ISO-8601 weekday: Monday=1 through Sunday=7.');
+            $table->unsignedTinyInteger('day_of_week')
+                ->raw('CHECK (day_of_week >= 1 AND day_of_week <= 7)')
+                ->comment('ISO-8601 weekday: Monday=1 through Sunday=7.');
             $table->time('start_time');
             $table->time('end_time');
             $table->unsignedSmallInteger('slot_duration_minutes')->default(30);
@@ -25,7 +27,6 @@ return new class extends Migration
             $table->time('break_end')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->check('day_of_week >= 1 AND day_of_week <= 7');
             $table->index(['doctor_id', 'clinic_id', 'day_of_week']);
         });
 
