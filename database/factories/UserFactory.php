@@ -42,4 +42,34 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => \App\Enums\UserRole::ADMIN->value,
+        ]);
+    }
+
+    public function doctor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => \App\Enums\UserRole::DOCTOR->value,
+        ]);
+    }
+
+    public function patient(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => \App\Enums\UserRole::PATIENT->value,
+        ]);
+    }
+
+    public function receptionist(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => \App\Enums\UserRole::RECEPTIONIST->value,
+        ]);
+    }
+    
 }
