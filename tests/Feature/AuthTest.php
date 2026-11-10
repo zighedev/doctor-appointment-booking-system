@@ -11,6 +11,7 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
+    //Register Tests
     public function test_user_can_register_successfully(): void
     {
         $response = $this->postJson('/api/register', [
@@ -76,6 +77,7 @@ class AuthTest extends TestCase
         $this->assertDatabaseCount('users', 1);
     }
 
+    //Login Tests
     public function test_user_can_login_successfully(): void
     {
         $user = User::factory()->patient()->create([
@@ -149,6 +151,7 @@ class AuthTest extends TestCase
         $this->assertDatabaseCount('personal_access_tokens', 0);
     }
 
+    //Logout Tests
     public function test_authenticated_user_can_logout(): void
     {
         $user = User::factory()->patient()->create();
@@ -168,6 +171,7 @@ class AuthTest extends TestCase
         ]);
     }
 
+    // Authenticated User Endpoint Tests
     public function test_authenticated_user_can_access_the_user_endpoint(): void
     {
         $user = User::factory()->patient()->create();
