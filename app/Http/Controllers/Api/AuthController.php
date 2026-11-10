@@ -80,4 +80,9 @@ class AuthController extends Controller
         ], 200);
     }
 
+    public function user(Request $request): UserResource
+    {
+        return new UserResource($request->user());
+    }
+
 }

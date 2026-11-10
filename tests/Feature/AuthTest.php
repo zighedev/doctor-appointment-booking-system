@@ -181,8 +181,8 @@ class AuthTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertJsonPath('id', $user->id)
-            ->assertJsonPath('email', $user->email);
+            ->assertJsonPath('data.id', $user->id)
+            ->assertJsonPath('data.email', $user->email);
     }
 
     public function test_guest_cannot_access_the_user_endpoint(): void
