@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Specialty\StoreSpecialtyRequest;
-use App\Http\Requests\Specialty\UpdateSpecialtyRequest;
+use App\Http\Requests\Admin\Specialty\SpecialtyFilterRequest;
+use App\Http\Requests\Admin\Specialty\StoreSpecialtyRequest;
+use App\Http\Requests\Admin\Specialty\UpdateSpecialtyRequest;
 use App\Http\Resources\SpecialtyResource;
 use App\Models\Specialty;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -17,9 +19,26 @@ class SpecialtyController extends Controller
     /**
      * Display active specialties.
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         $specialties = Specialty::query()->where('is_active', true)->orderBy('name')->get();
+        return SpecialtyResource::collection($specialties);
+    }
+
+    /**
+     * Display all specialties for admin management.
+     */
+    public function adminIndex(SpecialtyFilterRequest $request): AnonymousResourceCollection
+    {
+        $specialties = Specialty::query()
+            ->when(
+                $request->has('status'),
+                fn ($query) => $query->where('is_active', $request->boolean('status'))
+            )
+            ->orderBy('name')
+            ->paginate(15)
+            ->withQueryString();
+
         return SpecialtyResource::collection($specialties);
     }
 
@@ -29,6 +48,14 @@ class SpecialtyController extends Controller
     public function show(Specialty $specialty): SpecialtyResource
     {
         abort_unless($specialty->is_active, 404);
+        return new SpecialtyResource($specialty);
+    }
+
+    /**
+     * Display any specialty for admin management.
+     */
+    public function adminShow(Specialty $specialty): SpecialtyResource
+    {
         return new SpecialtyResource($specialty);
     }
 
