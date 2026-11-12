@@ -1,19 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Specialty;
+namespace App\Http\Requests\Admin\Specialty;
 
+use App\Http\Requests\Admin\AdminRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSpecialtyRequest extends FormRequest
+class StoreSpecialtyRequest extends AdminRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return $this->user()?->isAdmin() ?? false;
-    }
 
     /**
      * Get the validation rules that apply to the request.

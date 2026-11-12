@@ -1,20 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Specialty;
+namespace App\Http\Requests\Admin\Specialty;
 
+use App\Http\Requests\Admin\AdminRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
-class UpdateSpecialtyRequest extends FormRequest
+class UpdateSpecialtyRequest extends AdminRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return $this->user()?->isAdmin() ?? false;
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -39,6 +33,20 @@ class UpdateSpecialtyRequest extends FormRequest
                 'nullable',
                 'string',
             ],
+        ];
+    }
+
+    public function after(): array
+    {
+        return [
+            function (Validator $validator) {
+                if (! $this->hasAny(['name', 'description'])) {
+                    $validator->errors()->add(
+                        'request',
+                        'At least one field must be provided.'
+                    );
+                }
+            },
         ];
     }
     
