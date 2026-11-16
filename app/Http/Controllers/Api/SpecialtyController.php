@@ -73,7 +73,7 @@ class SpecialtyController extends Controller
             return $specialty;
         });
 
-        return (new SpecialtyResource($specialty))->response()->setStatusCode(201);
+        return (new SpecialtyResource($specialty->refresh()))->response()->setStatusCode(201);
     }
 
     /**
