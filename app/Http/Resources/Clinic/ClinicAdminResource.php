@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Clinic;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ClinicResource extends JsonResource
+class ClinicAdminResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -37,16 +37,6 @@ class ClinicResource extends JsonResource
             'payment_timeout_minutes' => $this->payment_timeout_minutes,
 
             'is_active' => $this->is_active,
-
-            'consultation_fee' => $this->whenPivotLoaded(
-                'clinic_doctor',
-                fn () => $this->pivot->consultation_fee
-            ),
-
-            'is_relationship_active' => $this->whenPivotLoaded(
-                'clinic_doctor',
-                fn () => (bool) $this->pivot->is_active
-            ),
 
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),

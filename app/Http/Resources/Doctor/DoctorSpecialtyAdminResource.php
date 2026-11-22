@@ -1,17 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Doctor;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SpecialtyResource extends JsonResource
+class DoctorSpecialtyAdminResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -20,9 +15,8 @@ class SpecialtyResource extends JsonResource
             'slug' => $this->slug,
             'description' => $this->description,
             'is_active' => $this->is_active,
-            'created_at' => $this->created_at?->toISOString(),
-            'updated_at' => $this->updated_at?->toISOString(),
+
+            'is_primary' => (bool) $this->pivot->is_primary,
         ];
-        
     }
 }

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Specialty;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\UserSummaryResource;
 
-class PatientResource extends JsonResource
+class SpecialtyResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +16,10 @@ class PatientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'address' => $this->address,
-            'user' => new UserSummaryResource($this->whenLoaded('user')),
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'description' => $this->description,
         ];
+        
     }
 }

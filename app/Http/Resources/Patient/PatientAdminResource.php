@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Patient;
 
+use App\Http\Resources\User\UserAdminResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\UserResource;
 
-class PatientDetailsResource extends JsonResource
+class PatientAdminResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,10 +24,10 @@ class PatientDetailsResource extends JsonResource
             'emergency_contact_relationship' => $this->emergency_contact_relationship,
             'address' => $this->address,
 
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-
-            'user' => new UserResource($this->whenLoaded('user')),
+            'user' => new UserAdminResource($this->whenLoaded('user')),
+            
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
         ];
     }
 }

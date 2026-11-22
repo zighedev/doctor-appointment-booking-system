@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,9 +17,6 @@ class UserSummaryResource extends JsonResource
         return [ 
             'id' => $this->id, 
             'name' => $this->name, 
-            'gender' => $this->gender?->value,
-            'is_active' => $this->is_active,
-            'created_at' => $this->created_at?->toISOString(),
         ];
     }
 }

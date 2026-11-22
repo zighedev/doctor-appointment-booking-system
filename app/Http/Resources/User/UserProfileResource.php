@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class UserProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,7 +21,6 @@ class UserResource extends JsonResource
             'phone' => $this->phone, 
             'gender' => $this->gender?->value, 
             'date_of_birth' => $this->date_of_birth?->toDateString(), 
-            'role' => $this->role?->value,
         ];
     }
 }
