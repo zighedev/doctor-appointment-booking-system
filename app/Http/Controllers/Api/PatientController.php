@@ -9,8 +9,8 @@ use App\Http\Requests\Admin\Patient\PatientFilterRequest;
 use App\Http\Requests\Admin\Patient\StorePatientRequest;
 use App\Http\Requests\Admin\Patient\UpdatePatientRequest;
 use App\Http\Requests\Patient\UpdateMyPatientProfileRequest;
-use App\Http\Resources\PatientDetailsResource;
-use App\Http\Resources\PatientResource;
+use App\Http\Resources\Patient\PatientProfileResource;
+use App\Http\Resources\Patient\PatientAdminResource;
 use App\Models\User;
 use App\Models\Patient;
 use Illuminate\Http\JsonResponse;
@@ -23,27 +23,27 @@ class PatientController extends Controller
     /** 
      * Display the authenticated patient's profile. 
      */
-    public function myProfile(Request $request): PatientDetailsResource
+    public function myProfile(Request $request): PatientProfileResource
     {
         $patient = $request->user()->patient()->firstOrFail();
 
         $patient->load('user');
 
-        return new PatientDetailsResource($patient);
+        return new PatientProfileResource($patient);
     }
 
     /** 
      * Update the authenticated patient's profile. 
      */
-    public function updateMyProfile(UpdateMyPatientProfileRequest $request): PatientDetailsResource
+    public function updateMyProfile(UpdateMyPatientProfileRequest $request): PatientProfileResource
     {
         $patient = $request->user()->patient()->firstOrFail();
 
         $patient->update($request->validated());
 
-        $patient->load('user');
+        $patient->refresh()->load('user');
 
-        return new PatientDetailsResource($patient);
+        return new PatientProfileResource($patient);
     }
 
     /**
@@ -71,17 +71,17 @@ class PatientController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return PatientResource::collection($patients);
+        return PatientAdminResource::collection($patients);
     }
 
     /**
      * Display a specific patient for admin management.
      */
-    public function adminShow(Patient $patient): PatientDetailsResource
+    public function adminShow(Patient $patient): PatientAdminResource
     {
         $patient->load('user');
 
-        return new PatientDetailsResource($patient);
+        return new PatientAdminResource($patient);
     }
 
     /** 
@@ -119,19 +119,19 @@ class PatientController extends Controller
 
         $patient->load('user');
 
-        return (new PatientDetailsResource($patient))->response()->setStatusCode(201);
+        return (new PatientAdminResource($patient))->response()->setStatusCode(201);
     }
 
     /** 
      * Update a specific patient's profile by an administrator.
      */
-    public function update(UpdatePatientRequest $request, Patient $patient): PatientDetailsResource
+    public function update(UpdatePatientRequest $request, Patient $patient): PatientAdminResource
     {
         $patient->update($request->validated());
 
-        $patient->load('user');
+        $patient->refresh()->load('user');
 
-        return new PatientDetailsResource($patient);
+        return new PatientAdminResource($patient);
     }
 
     /** 

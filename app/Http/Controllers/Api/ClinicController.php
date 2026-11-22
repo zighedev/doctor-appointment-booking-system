@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Clinic\ClinicFilterRequest;
 use App\Http\Requests\Admin\Clinic\StoreClinicRequest;
 use App\Http\Requests\Admin\Clinic\UpdateClinicRequest;
-use App\Http\Resources\ClinicResource;
+use App\Http\Resources\Clinic\ClinicAdminResource;
+use App\Http\Resources\Clinic\ClinicResource;
 use App\Models\Clinic;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -61,7 +62,7 @@ class ClinicController extends Controller
         ->paginate(15)
         ->withQueryString();
         
-        return ClinicResource::collection($clinics);
+        return ClinicAdminResource::collection($clinics);
     }
 
 
@@ -69,9 +70,9 @@ class ClinicController extends Controller
     /**
      * Display any clinic for admin.
      */
-    public function adminShow(Clinic $clinic): ClinicResource
+    public function adminShow(Clinic $clinic): ClinicAdminResource
     {
-        return new ClinicResource($clinic);
+        return new ClinicAdminResource($clinic);
     }
 
     /**
@@ -81,35 +82,35 @@ class ClinicController extends Controller
     {
         $clinic = Clinic::create($request->validated());
 
-        return (new ClinicResource($clinic->refresh()))->response()->setStatusCode(201);
+        return (new ClinicAdminResource($clinic->refresh()))->response()->setStatusCode(201);
     }
 
     /**
      * Update the specified clinic.
      */
-    public function update(UpdateClinicRequest $request, Clinic $clinic): ClinicResource
+    public function update(UpdateClinicRequest $request, Clinic $clinic): ClinicAdminResource
     {
         $clinic->update($request->validated());
-        return new ClinicResource($clinic->refresh());
+        return new ClinicAdminResource($clinic->refresh());
     }
 
     /**
      * Deactivate the specified clinic.
      */
-    public function deactivate(Clinic $clinic): ClinicResource
+    public function deactivate(Clinic $clinic): ClinicAdminResource
     {
         $clinic->is_active = false;
         $clinic->save();
-        return new ClinicResource($clinic->refresh());
+        return new ClinicAdminResource($clinic->refresh());
     }
 
     /**
      * Activate the specified clinic.
      */
-    public function activate(Clinic $clinic): ClinicResource
+    public function activate(Clinic $clinic): ClinicAdminResource
     {
         $clinic->is_active = true;
         $clinic->save();
-        return new ClinicResource($clinic->refresh());
+        return new ClinicAdminResource($clinic->refresh());
     }
 }

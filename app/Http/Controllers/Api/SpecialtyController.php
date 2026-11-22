@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Specialty\SpecialtyFilterRequest;
 use App\Http\Requests\Admin\Specialty\StoreSpecialtyRequest;
 use App\Http\Requests\Admin\Specialty\UpdateSpecialtyRequest;
-use App\Http\Resources\SpecialtyResource;
+use App\Http\Resources\Specialty\SpecialtyAdminResource;
+use App\Http\Resources\Specialty\SpecialtyResource;
 use App\Models\Specialty;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -39,7 +40,7 @@ class SpecialtyController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return SpecialtyResource::collection($specialties);
+        return SpecialtyAdminResource::collection($specialties);
     }
 
     /**
@@ -54,9 +55,9 @@ class SpecialtyController extends Controller
     /**
      * Display any specialty for admin management.
      */
-    public function adminShow(Specialty $specialty): SpecialtyResource
+    public function adminShow(Specialty $specialty): SpecialtyAdminResource
     {
-        return new SpecialtyResource($specialty);
+        return new SpecialtyAdminResource($specialty);
     }
 
     /**
@@ -73,36 +74,36 @@ class SpecialtyController extends Controller
             return $specialty;
         });
 
-        return (new SpecialtyResource($specialty->refresh()))->response()->setStatusCode(201);
+        return (new SpecialtyAdminResource($specialty->refresh()))->response()->setStatusCode(201);
     }
 
     /**
      * Update an existing specialty.
      */
-    public function update(UpdateSpecialtyRequest $request, Specialty $specialty): SpecialtyResource 
+    public function update(UpdateSpecialtyRequest $request, Specialty $specialty): SpecialtyAdminResource
     {
         $specialty->update($request->validated());
-        return new SpecialtyResource($specialty->refresh());
+        return new SpecialtyAdminResource($specialty->refresh());
     }
 
     /**
      * Deactivate a specialty.
      */
-    public function deactivate(Specialty $specialty): SpecialtyResource
+    public function deactivate(Specialty $specialty): SpecialtyAdminResource
     {
         $specialty->is_active = false;
         $specialty->save();
-        return new SpecialtyResource($specialty->refresh());
+        return new SpecialtyAdminResource($specialty->refresh());
     }
 
     /**
      * Activate a specialty.
      */
-    public function activate(Specialty $specialty): SpecialtyResource
+    public function activate(Specialty $specialty): SpecialtyAdminResource
     {
         $specialty->is_active = true;
         $specialty->save();
-        return new SpecialtyResource($specialty->refresh());
+        return new SpecialtyAdminResource($specialty->refresh());
     }
 
     /**
