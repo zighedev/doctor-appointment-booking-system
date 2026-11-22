@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -65,6 +66,40 @@ class Doctor extends Model
     public function appointments(): HasManyThrough
     {
         return $this->hasManyThrough(Appointment::class, AppointmentSlot::class);
+    }
+
+
+
+    // Local Scopes
+    
+    public function scopeFilterByName(Builder $query, string $name): Builder
+    {
+        return $query->whereHas(
+            'user',
+            fn (Builder $userQuery) => $userQuery->where(
+                'name',
+                'like',
+                '%' . $name . '%'
+            )
+        );
+    }
+
+    public function scopeFilterByStatus(Builder $query, bool $status): Builder
+    {
+        return $query->whereHas(
+            'user',
+            fn (Builder $userQuery) => $userQuery->where('is_active', $status)
+        );
+    }
+
+    public function scopeFilterByVerified(Builder $query, bool $verified): Builder
+    {
+        return $query->where('is_verified', $verified);
+    }
+
+    public function scopeFilterByAcceptingAppointments(Builder $query, bool $accepting): Builder
+    {
+        return $query->where('is_accepting_appointments', $accepting);
     }
 
 }

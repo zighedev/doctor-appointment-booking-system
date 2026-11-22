@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClinicController;
+use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\SpecialtyController;
 
@@ -31,6 +32,19 @@ Route::middleware(['auth:sanctum', 'role:admin'])
         Route::post('patients', [PatientController::class, 'store']);
         Route::patch('patients/{patient}', [PatientController::class, 'update']);
         Route::patch('patients/{patient}/status', [PatientController::class, 'updateStatus']);
+
+        // Doctor management
+        Route::get('doctors', [DoctorController::class, 'adminIndex']);
+        Route::get('doctors/{doctor}', [DoctorController::class, 'adminShow']);
+        Route::post('doctors', [DoctorController::class, 'store']);
+        Route::patch('doctors/{doctor}', [DoctorController::class, 'update']);
+        Route::patch('doctors/{doctor}/status', [DoctorController::class, 'updateStatus']);
+        Route::patch(
+            '/doctors/{doctor}/verification-status',
+            [DoctorController::class, 'updateVerificationStatus']
+        );
+
+
 
     });
     
