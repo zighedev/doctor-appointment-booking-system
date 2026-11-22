@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\UserResource;
 use App\Enums\UserRole;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -20,27 +21,32 @@ class AuthController extends Controller
     {
         $validated = $request->validated();
 
-        $user = new User([
-            'name' => $validated['name'], 
-            'email' => $validated['email'], 
-            'phone' => $validated['phone'] ?? null, 
-            'password' => $validated['password'], 
-            'gender' => $validated['gender'] ?? null, 
-            'date_of_birth' => $validated['date_of_birth'] ?? null, 
-        ]);
-        
-        $user->role = UserRole::PATIENT;
-        $user->save();
+        $user = DB::transaction(function () use ($validated) {
+            $user = new User([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'] ?? null,
+                'password' => $validated['password'],
+                'gender' => $validated['gender'] ?? null,
+                'date_of_birth' => $validated['date_of_birth'] ?? null,
+            ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken; 
+            $user->role = UserRole::PATIENT;
+            $user->save();
 
-        return response()->json([ 
-            'message' => 'Registration successful.', 
+            $user->patient()->create();
+
+            return $user;
+        });
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Registration successful.',
             'user' => new UserResource($user),
-            'token' => $token, 
-            'token_type' => 'Bearer', 
+            'token' => $token,
+            'token_type' => 'Bearer',
         ], 201);
-
     }
 
     public function login(LoginRequest $request): JsonResponse

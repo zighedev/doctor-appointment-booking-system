@@ -39,6 +39,12 @@ class AuthTest extends TestCase
             'email' => 'patient@example.com',
         ]);
 
+        $user = User::where('email', 'patient@example.com')->first();
+
+        $this->assertDatabaseHas('patients', [
+            'user_id' => $user->id,
+        ]);
+
         $this->assertDatabaseCount('personal_access_tokens', 1);
     }
 
