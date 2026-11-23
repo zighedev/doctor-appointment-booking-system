@@ -54,7 +54,7 @@ class PatientController extends Controller
         $filters = $request->validated();
 
         $patients = Patient::query()
-            ->with('user:id,name,gender,is_active,created_at')
+            ->with('user')
             ->when(
                 isset($filters['registration_period']),
                 fn ($query) => $query->filterByRegistrationPeriod($filters['registration_period'])

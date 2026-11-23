@@ -100,11 +100,10 @@ class DoctorController extends Controller
      */
     public function show(Doctor $doctor): DoctorResource
     {
-        $doctor->load('user:id,name,is_active');
-
         abort_unless($doctor->is_verified && $doctor->user?->is_active, 404);
 
         $doctor->load([
+            'user:id,name',
             'specialties' => fn ($query) => $query->where('specialties.is_active', true),
             'clinics' => fn ($query) => $query
                 ->where('clinics.is_active', true)
