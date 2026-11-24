@@ -3,9 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClinicController;
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SpecialtyController;
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('profile', [ProfileController::class, 'show']);
+    Route::patch('profile', [ProfileController::class, 'update']);
 
     // Specialty listing and details.
     Route::get('specialties', [SpecialtyController::class, 'index']);
