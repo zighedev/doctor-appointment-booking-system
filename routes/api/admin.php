@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClinicController;
 use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\DoctorSpecialtyController;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\SpecialtyController;
 
@@ -44,7 +45,13 @@ Route::middleware(['auth:sanctum', 'role:admin'])
             [DoctorController::class, 'updateVerificationStatus']
         );
 
-
+        // Doctor-Specialty management
+        Route::post('doctors/{doctor}/specialties', [DoctorSpecialtyController::class, 'attach']);
+        Route::delete('doctors/{doctor}/specialties/{specialty}', [DoctorSpecialtyController::class, 'detach']);
+        Route::patch(
+            'doctors/{doctor}/specialties/{specialty}/primary',
+            [DoctorSpecialtyController::class, 'setPrimary']
+        );
 
     });
     
