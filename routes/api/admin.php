@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClinicController;
+use App\Http\Controllers\Api\DoctorClinicController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\DoctorSpecialtyController;
 use App\Http\Controllers\Api\PatientController;
@@ -52,6 +53,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])
             'doctors/{doctor}/specialties/{specialty}/primary',
             [DoctorSpecialtyController::class, 'setPrimary']
         );
+
+        // Doctor-Clinic management
+        Route::post('doctors/{doctor}/clinics', [DoctorClinicController::class, 'attach']);
+        Route::patch('doctors/{doctor}/clinics/{clinic}', [DoctorClinicController::class, 'update']);
+        Route::delete('doctors/{doctor}/clinics/{clinic}', [DoctorClinicController::class, 'detach']);
 
     });
     
